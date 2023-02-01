@@ -194,10 +194,10 @@ function SaveManager:LoadAutoloadConfig()
         local Success, Error = self:Load(Name)
 
         if not Success then
-            return self.Library:Notify("[Fondra]: Failed to load autoload config: " .. Error)
+            return self.Library:Notify("Failed to load autoload config: " .. Error)
         end
 
-        self.Library:Notify(string.format("[Fondra]: Auto loaded config %q", Name))
+        self.Library:Notify(string.format("Auto loaded config %q", Name))
     end
 end
 
@@ -215,16 +215,16 @@ function SaveManager:BuildConfigSection(Tab)
         local Name = Options.SaveManager_ConfigName.Value
 
         if Name:gsub(" ", "") == "" then 
-            return self.Library:Notify("[Fondra]: Invalid config name. [Empty]", 2)
+            return self.Library:Notify("Invalid config name. [Empty]", 2)
         end
 
         local Success, Error = self:Save(Name)
 
         if not Success then
-            return self.Library:Notify("[Fondra]: Failed to save config: " .. Error)
+            return self.Library:Notify("Failed to save config: " .. Error)
         end
 
-        self.Library:Notify(string.format("[Fondra]: Created config %q", Name))
+        self.Library:Notify(string.format("Created config %q", Name))
 
         Options.SaveManager_ConfigList.Values = self:RefreshConfigList()
         Options.SaveManager_ConfigList:SetValues()
@@ -234,10 +234,10 @@ function SaveManager:BuildConfigSection(Tab)
         local Success, Error = self:Load(Name)
 
         if not Success then
-            return self.Library:Notify("[Fondra]: Failed to load config: " .. Error)
+            return self.Library:Notify("Failed to load config: " .. Error)
         end
 
-        self.Library:Notify(string.format("[Fondra]: Loaded config %q", Name))
+        self.Library:Notify(string.format("Loaded config %q", Name))
     end)
 
     GroupBox:AddButton("Overwrite config", function()
@@ -245,17 +245,17 @@ function SaveManager:BuildConfigSection(Tab)
         local Success, Error = self:Save(Name)
 
         if not Success then
-            return self.Library:Notify("[Fondra]: Failed to overwrite config: " .. Error)
+            return self.Library:Notify("Failed to overwrite config: " .. Error)
         end
 
-        self.Library:Notify(string.format("[Fondra]: Overwrote config %q", Name))
+        self.Library:Notify(string.format("Overwrote config %q", Name))
     end)
     
     GroupBox:AddButton("Autoload config", function()
         local Name = Options.SaveManager_ConfigList.Value
         writefile(self.Folder .. "/Settings/AutoLoad.txt", Name)
         SaveManager.AutoloadLabel:SetText("Current autoload config: " .. Name)
-        self.Library:Notify(string.format("[Fondra]: Set %q to auto load", Name))
+        self.Library:Notify(string.format("Set %q to auto load", Name))
     end)
 
     GroupBox:AddButton("Refresh config list", function()
@@ -281,23 +281,6 @@ function SaveManager:BuildConfigSection(Tab)
         Tooltip = "Shows your keybind on a ui.",
         Default = true
     })
-    
-    GroupBox:AddToggle("ToggleFondraChat", {
-        Text = "Fondra Communication",
-        Tooltip = "Talk with other fondra users.",
-        Default = true
-    })
-
-    GroupBox:AddDivider()
-
-    GroupBox:AddDropdown("WatermarkCustomizationDropdown", {
-        Text = "Watermark Customizations",
-        Tooltip = "Watermark Customizations.",
-        Values = { "Time", "Date", "Elapsed", "FPS", "Ping", "User" },
-        
-        Default = 5,
-        Multi = true
-    })
 
     GroupBox:AddDivider()
 
@@ -305,46 +288,12 @@ function SaveManager:BuildConfigSection(Tab)
 
     Toggles.ToggleWatermark:OnChanged(function()
         self.Library:SetWatermarkVisibility(Toggles.ToggleWatermark.Value)
-        self.Library:Notify(string.format("[Fondra]: Watermark %s", Toggles.ToggleWatermark.Value and "Enabled." or "Disabled."))
+        self.Library:Notify(string.format("Watermark %s", Toggles.ToggleWatermark.Value and "Enabled." or "Disabled."))
     end)
 
     Toggles.ToggleKeybindsFrame:OnChanged(function()
         self.Library.KeybindFrame.Visible = Toggles.ToggleKeybindsFrame.Value
-        self.Library:Notify(string.format("[Fondra]: Keybind Frame %s", Toggles.ToggleWatermark.Value and "Enabled." or "Disabled."))
-    end)
-
-    Toggles.ToggleFondraChat:OnChanged(function()
-        self.Library:Notify(string.format("[Fondra]: Fondra Communication %s", Toggles.ToggleFondraChat.Value and "Enabled." or "Disabled."))
-    end)
-
-    Options.WatermarkCustomizationDropdown:OnChanged(function()
-        local CurrentString = "<b>Fondra</b>"
-
-        if Options.WatermarkCustomizationDropdown.Value.Time then
-            CurrentString = CurrentString.." - {Time}"
-        end
-
-        if Options.WatermarkCustomizationDropdown.Value.Date then
-            CurrentString = CurrentString.." - {Date}"
-        end
-
-        if Options.WatermarkCustomizationDropdown.Value.Elapsed then
-            CurrentString = CurrentString.." - {ElapsedTime}"
-        end
-
-        if Options.WatermarkCustomizationDropdown.Value.FPS then
-            CurrentString = CurrentString.." - {FPS}"
-        end
-
-        if Options.WatermarkCustomizationDropdown.Value.Ping then
-            CurrentString = CurrentString.." - {Ping}"
-        end
-
-        if Options.WatermarkCustomizationDropdown.Value.User then
-            CurrentString = CurrentString.." - {Username}"
-        end
-
-        self.Library:SetWatermark(CurrentString)
+        self.Library:Notify(string.format("Keybind Frame %s", Toggles.ToggleWatermark.Value and "Enabled." or "Disabled."))
     end)
 
     if isfile(self.Folder .. "/Settings/AutoLoad.txt") then
